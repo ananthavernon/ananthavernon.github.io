@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabel Order</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <style>
+      body {
+      background-image: url('badminton.jpg');
+      background-repeat: no-repeat;
+      background-attachment: fixed; 
+      background-size: 100% 100%;
+      color: white;
+      }
+    </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-md bg-primary navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html" style="font-weight: bolder; font-family: monospace; font-size: 175%;">Home</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="tabelUser.html">Tabel User</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="tabelPaket.html">Tabel Paket</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="tabelOrder.html">Tabel Order</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid background-image p-5 text-light text-center">
+    <h1>Aplikasi Pemesanan Lapangan Olahraga</h1>
+    <p>Vernon Anantha Ludji Leo</p>
+</div>
+
+    <div id="app">
+
+        <div class="container">
+            <div class="py-5 text-center">
+              <h2>Data Pesanan</h2>
+              <p class="lead">Jasa Penyewaan Lapangan Olahraga</p>
+            </div>
+      
+              <div class="col-md-12">
+                <h4 class="mb-3">Data Pesanan  <button class="btn btn-md btn-primary" v-on:click="resetForm()">Edit Data Pesanan </button>
+                </h4>
+              <table class="table text-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>ID Pesanan</th>
+                        <th>Tanggal Pemesanan</th>
+                        <th>Check In</th>
+                        <th>Check Out</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                    <tr v-for="order in orders">
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.id_pesanan }}</td>
+                        <td>{{ order.tanggal_pesan }}</td>
+                        <td>{{ order.checkIn }}</td>
+                        <td>{{ order.checkOut }}</td>
+                        <td>{{ order.status_order }}</td>
+                        <td><button class="btn btn-md btn-warning" v-on:click="getEdit(order)">Edit</button></td>
+                        <td><button class="btn btn-danger" v-on:click="getDelete(order)">Hapus</button></td>
+                    </li>
+                </table>
+
+                <div v-if="message" class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+                
+            
+                <h4 class="mb-3">Informasi Paket</h4>
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="id_pesanan">ID Pesanan</label>
+                      <input  v-model="id_pesanan" type="text" class="form-control" id="id_pesanan" placeholder="" value="" required>
+                      <div class="invalid-feedback">
+                        Valid first name is required.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="tanggal_pesan">Tanggal Pemesanan</label>
+                    <input  v-model="tanggal_pesan" type="text" class="form-control" id="tanggal_pesan" placeholder="" value="" required>
+                    <div class="invalid-feedback">
+                      Valid first name is required.
+                    </div>
+                  </div>
+      
+                  <div class="col-md-6 mb-3">
+                    <label for="checkIn">Check In</label>
+                    <input  v-model="checkIn" type="text" class="form-control" id="checkIn" placeholder="" value="" required>
+                    <div class="invalid-feedback">
+                      Valid first name is required.
+                    </div>
+                  </div>
+      
+                  <div class="col-md-6 mb-3">
+                    <label for="checkOut">Check Out</label>
+                    <input  v-model="checkOut" type="text" class="form-control" id="checkOut" placeholder="" value="" required>
+                    <div class="invalid-feedback">
+                      Valid first name is required.
+                    </div>
+                  </div>
+      
+                  <div>
+                    <div class="col-md-6 mb-3">
+                      <label for="status_order">Status Order</label><br>
+                      <input type = "radio" id = "sedangDigunakan" value = "Sedang Digunakan" v-model = "status_order">
+                      <label>Sedang Digunakan</label>
+                      <input type = "radio" id = "selesai" value = "Selesai" v-model = "status_order">
+                      <label>Selesai</label>
+                      <div class="invalid-feedback">
+                        Valid last name is required.
+                      </div>
+                    </div>
+                  </div>
+                
+                  <hr class="mb-4">
+                  <button v-if="!editMode && !deleteMode" v-on:click="createOrder" class="btn btn-primary btn-lg btn-block" type="submit">Submit Data</button>
+                  <button v-if="editMode" v-on:click="updateOrder" class="btn btn-warning btn-lg btn-block" type="submit">Perbarui Data</button>
+                  <button v-if="deleteMode" v-on:click="deleteOrder" class="btn btn-danger btn-lg btn-block" type="submit">Hapus Data</button>
+              </div>
+            </div>
+
+            <footer class="my-5 pt-5 text-muted text-center text-small">
+                <p class="mb-1">&copy; Vernon Anantha</p>
+            </footer>
+
+    </div>
+    
+
+    <!-- Axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+        var app = new Vue ({
+            el: '#app',
+            data: {
+                errors: [],
+                message: null,
+                orders:[],
+                orderIdEdit: null,
+                orderIdDelete: null,
+                editMode: false,
+                deleteMode: false,
+                id_pesanan: '',
+                tanggal_pesan: '',
+                checkIn: '',
+                checkOut: '',
+                status_order: '',
+            },
+            mounted: function() {
+                this.getOrder();
+            },
+            methods: {
+                getOrder() {
+                    axios.get('https://62183ebd1a1ba20cba9c1093.mockapi.io/orders')
+                        .then(response => {
+                            this.orders = response.data;
+                            console.log(response);
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                },
+                createOrder: function(){
+                    axios.post('https://62183ebd1a1ba20cba9c1093.mockapi.io/orders', {
+                        id_pesanan: this.id_pesanan,
+                        tanggal_pesan: this.tanggal_pesan,
+                        checkIn: this.checkIn,
+                        checkOut: this.checkOut,
+                        status_order: this.status_order,
+                    })
+                    .then(response => {
+                            this.getOrder();
+                            this.message = "Your data has been submitted";
+                            console.log(response);
+                    })
+                    .catch(error => {
+                            console.log(error);
+                    });
+                },
+                resetForm: function () {
+                    this.message = null;
+                    this.editMode = false;
+                    this.deleteMode = false;
+                    this.OrderIdEdit = null;
+                    this.id_pesanan = null;
+                    this.tanggal_pesan = null;
+                    this.checkIn = null;
+                    this.checkOut = null;
+                    this.status_order = null;
+                },
+                getEdit: function (order) {
+                    this.message = null;
+                    this.editMode = true;
+                    this.deleteMode = false;
+                    this.orderIdEdit = order.id;
+                    this.id_pesanan = order.id_pesanan;
+                    this.tanggal_pesan = order.tanggal_pesan;
+                    this.checkIn = order.checkIn;
+                    this.checkOut = order.checkOut;
+                    this.status_order = order.status_order;
+                },
+                getDelete: function (order) {
+                    this.message = null;
+                    this.deleteMode = true;
+                    this.editMode = false;
+                    this.orderIdDelete = order.id;
+                    this.id_pesanan = order.id_pesanan;
+                    this.tanggal_pesan = order.tanggal_pesan;
+                    this.checkIn = order.checkIn;
+                    this.checkOut = order.checkOut;
+                    this.status_order = order.status_order;
+                },
+                updateOrder: function () {
+                    axios.put(`https://62183ebd1a1ba20cba9c1093.mockapi.io/orders/${this.orderIdEdit}`, {
+                            id_pesanan: this.id_pesanan,
+                            tanggal_pesan: this.tanggal_pesan,
+                            checkIn: this.checkIn,
+                            checkOut: this.checkOut,
+                            status_order: this.status_order,
+                        })
+                        .then(res => {
+                            // handle success
+                            this.message = "Your data has been updated";
+                            this.getOrder();
+                        })
+                        .catch(err => {
+                            // handle error
+                            console.log(err);
+                        })
+                },
+                // Delete User
+                deleteOrder: function () {
+                    axios.delete(`https://62183ebd1a1ba20cba9c1093.mockapi.io/orders/${this.orderIdDelete}`)
+                        .then(res => {
+                            // handle success
+                            this.message = "Your data has been deleted";
+                            this.getOrder();
+                        })
+                        .catch(err => {
+                            // handle error
+                            console.log(err);
+                        })
+                }
+            }
+        })
+        
+    </script>
+
+
+</body>
+</html>
